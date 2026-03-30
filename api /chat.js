@@ -1,10 +1,9 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    // Parse body manually (needed for non-Next.js Vercel projects)
     let body = req.body;
     if (typeof body === 'string') {
       body = JSON.parse(body);
@@ -25,4 +24,4 @@ export default async function handler(req, res) {
   } catch (err) {
     res.status(500).json({ error: 'Proxy error', details: err.message });
   }
-}
+};
