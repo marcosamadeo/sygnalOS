@@ -10,14 +10,14 @@ jobs:
       - name: Deploy Worker
         run: |
           curl -s -X PUT \
-            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/workers/scripts/sygnal-os" \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/workers/scripts/sygnal-proxy" \
             -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
             -H "Content-Type: application/javascript" \
             --data-binary @worker/proxy.js
       - name: Set API Key on Worker
         run: |
           curl -s -X PUT \
-            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/workers/scripts/sygnal-os/secrets" \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/workers/scripts/sygnal-proxy/secrets" \
             -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"name":"ANTHROPIC_API_KEY","text":"${{ secrets.ANTHROPIC_API_KEY }}","type":"secret_text"}'
