@@ -7,129 +7,91 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --ink: #f0ede8;
-    --ink2: #b8b4ae;
-    --ink3: #6a6760;
-    --paper: #141414;
-    --surface: #1c1c1c;
-    --surface2: #222222;
-    --line: #2e2e2e;
-    --line2: #3a3a3a;
-    --accent: #c8a96e;
-    --accent-dim: rgba(200,169,110,0.10);
-    --accent-border: rgba(200,169,110,0.25);
-    --accent2: #e8e4dc;
-    --bubble-me: #1e2a1e;
-    --bubble-me-border: #2d3d2d;
-    --bubble-me-text: #d4e8d4;
-    --bubble-him: #1e1e1e;
-    --bubble-him-text: #e8e4dc;
-    --radius: 18px;
-    --ff-display: 'DM Serif Display', Georgia, serif;
-    --ff-body: 'DM Sans', system-ui, sans-serif;
+    --ink: #f0ede8; --ink2: #b8b4ae; --ink3: #6a6760;
+    --paper: #141414; --surface: #1c1c1c; --surface2: #222222;
+    --line: #2e2e2e; --line2: #3a3a3a;
+    --accent: #c8a96e; --accent-dim: rgba(200,169,110,0.10); --accent-border: rgba(200,169,110,0.25);
+    --bubble-me: #1e2a1e; --bubble-me-border: #2d3d2d; --bubble-me-text: #d4e8d4;
+    --bubble-him: #1e1e1e; --bubble-him-text: #e8e4dc;
+    --radius: 18px; --ff-display: 'DM Serif Display', Georgia, serif; --ff-body: 'DM Sans', system-ui, sans-serif;
   }
-
   html, body { height: 100%; background: var(--paper); color: var(--ink); font-family: var(--ff-body); font-size: 15px; line-height: 1.6; }
 
+  /* PASSWORD MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+  .modal-overlay.hidden { display: none; }
+  .modal-box { background: #1c1c1c; border: 0.5px solid #3a3a3a; border-radius: 16px; padding: 40px 48px; width: 360px; text-align: center; }
+  .modal-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 28px; }
+  .modal-logo-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); display: flex; align-items: center; justify-content: center; }
+  .modal-logo-icon svg { width: 16px; height: 16px; fill: #0f0f0f; }
+  .modal-logo-text { font-size: 14px; font-weight: 600; letter-spacing: 0.06em; color: var(--accent); }
+  .modal-title { font-family: var(--ff-display); font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+  .modal-sub { font-size: 13px; color: var(--ink3); margin-bottom: 28px; line-height: 1.5; }
+  .modal-input { width: 100%; background: #222; border: 0.5px solid #3a3a3a; border-radius: 8px; padding: 12px 16px; font-size: 14px; color: var(--ink); font-family: var(--ff-body); outline: none; margin-bottom: 12px; text-align: center; letter-spacing: 0.1em; }
+  .modal-input:focus { border-color: var(--accent-border); }
+  .modal-btn { width: 100%; background: var(--accent); border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; color: #0f0f0f; cursor: pointer; transition: opacity 0.15s; }
+  .modal-btn:hover { opacity: 0.85; }
+  .modal-error { font-size: 12px; color: #e88; margin-top: 10px; min-height: 18px; }
+
   .layout { display: grid; grid-template-columns: 300px 1fr; height: 100vh; max-width: 1100px; margin: 0 auto; }
-
-  /* SIDEBAR */
-  .sidebar {
-    border-right: 1px solid var(--line);
-    padding: 36px 28px;
-    display: flex; flex-direction: column; gap: 0;
-    background: var(--paper);
-    position: relative; overflow-y: auto;
-  }
-  .sidebar::before {
-    content: ''; position: absolute; top: -60px; right: -60px;
-    width: 220px; height: 220px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,169,110,0.07) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
+  .sidebar { border-right: 1px solid var(--line); padding: 36px 28px; display: flex; flex-direction: column; gap: 0; background: var(--paper); position: relative; overflow-y: auto; }
+  .sidebar::before { content: ''; position: absolute; top: -60px; right: -60px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(200,169,110,0.07) 0%, transparent 70%); pointer-events: none; }
   .wordmark { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; }
   .wordmark-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--accent); display: flex; align-items: center; justify-content: center; }
   .wordmark-icon svg { width: 14px; height: 14px; fill: #0f0f0f; }
   .wordmark-text { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; color: var(--accent); }
   .wordmark-sub { font-size: 10px; color: var(--ink3); letter-spacing: 0.04em; margin-left: 2px; margin-top: 1px; }
-
-  .avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--line2); display: flex; align-items: center; justify-content: center; font-family: var(--ff-display); font-size: 22px; color: var(--accent); letter-spacing: 1px; margin-bottom: 20px; flex-shrink: 0; position: relative; }
+  .avatar { width: 72px; height: 72px; border-radius: 50%; border: 1px solid var(--line2); overflow: hidden; margin-bottom: 20px; flex-shrink: 0; position: relative; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
   .avatar::after { content: ''; position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background: #4caf7d; border-radius: 50%; border: 2px solid var(--paper); }
-
   .sidebar-name { font-family: var(--ff-display); font-size: 22px; line-height: 1.2; color: var(--ink); margin-bottom: 4px; }
   .sidebar-title { font-size: 12px; font-weight: 500; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
   .sidebar-blurb { font-size: 12px; color: var(--ink3); line-height: 1.65; margin-bottom: 20px; padding: 12px 14px; background: var(--surface); border: 0.5px solid var(--line2); border-left: 2px solid var(--accent); border-radius: 6px; }
   .divider { height: 0.5px; background: var(--line); margin-bottom: 24px; }
   .sidebar-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 12px; }
-
   .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
   .pill { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--line2); color: var(--ink2); background: var(--surface); cursor: pointer; transition: all 0.15s; line-height: 1.4; }
   .pill:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
-
   .companies { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
   .company-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--ink2); }
   .company-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ink3); flex-shrink: 0; }
   .company-dot.gold { background: var(--accent); }
-
-  /* API KEY SETUP */
-  .api-setup { background: var(--surface); border: 0.5px solid var(--accent-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
-  .api-setup-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-  .api-setup-desc { font-size: 11px; color: var(--ink3); line-height: 1.5; margin-bottom: 10px; }
-  .api-input-row { display: flex; gap: 6px; }
-  .api-input { flex: 1; background: var(--surface2); border: 0.5px solid var(--line2); border-radius: 6px; padding: 7px 10px; font-size: 11px; color: var(--ink); font-family: var(--ff-body); outline: none; }
-  .api-input:focus { border-color: var(--accent-border); }
-  .api-btn { background: var(--accent); border: none; border-radius: 6px; padding: 7px 12px; font-size: 11px; font-weight: 600; color: #0f0f0f; cursor: pointer; white-space: nowrap; }
-  .api-btn:hover { opacity: 0.85; }
-  .api-status { font-size: 11px; margin-top: 6px; }
-  .api-status.ok { color: #4caf7d; }
-  .api-status.err { color: #e88; }
-
   .sidebar-footer { margin-top: auto; font-size: 11px; color: var(--ink3); line-height: 1.8; padding-top: 20px; border-top: 0.5px solid var(--line); }
   .sidebar-footer a { color: var(--ink3); text-decoration: none; }
   .sidebar-footer a:hover { color: var(--accent); }
-
-  /* CHAT PANE */
   .chat-pane { display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: var(--paper); }
   .chat-header { padding: 20px 28px 16px; border-bottom: 0.5px solid var(--line); display: flex; align-items: center; justify-content: space-between; background: var(--paper); flex-shrink: 0; }
   .chat-header-title { font-family: var(--ff-display); font-size: 18px; color: var(--ink); }
   .chat-header-sub { font-size: 12px; color: var(--ink3); margin-top: 2px; }
   .model-badge { font-size: 10px; font-weight: 500; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--line2); color: var(--ink3); background: var(--surface); letter-spacing: 0.04em; }
-
   .messages { flex: 1; overflow-y: auto; padding: 28px 28px 16px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
   .messages::-webkit-scrollbar { width: 4px; }
   .messages::-webkit-scrollbar-track { background: transparent; }
   .messages::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
-
   .welcome { text-align: center; padding: 40px 20px; opacity: 0; animation: fadeUp 0.6s 0.2s forwards; }
   .welcome-quote { font-family: var(--ff-display); font-size: 26px; line-height: 1.3; color: var(--ink); margin-bottom: 12px; font-style: italic; }
   .welcome-sub { font-size: 13px; color: var(--ink3); margin-bottom: 28px; }
-
   .starter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 520px; margin: 0 auto; }
   .starter-card { background: var(--surface); border: 0.5px solid var(--line2); border-radius: 12px; padding: 14px 16px; cursor: pointer; text-align: left; transition: all 0.15s; }
   .starter-card:hover { border-color: var(--accent-border); background: var(--accent-dim); transform: translateY(-1px); }
   .starter-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
   .starter-text { font-size: 13px; color: var(--ink2); line-height: 1.45; }
-
   .msg-row { display: flex; gap: 12px; align-items: flex-start; opacity: 0; transform: translateY(8px); animation: fadeUp 0.3s forwards; }
   .msg-row.user { flex-direction: row-reverse; }
-  .msg-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: 0.5px solid var(--line2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--accent); flex-shrink: 0; margin-top: 2px; letter-spacing: 0.5px; }
+  .msg-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: 0.5px solid var(--line2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--accent); flex-shrink: 0; margin-top: 2px; letter-spacing: 0.5px; overflow: hidden; }
+  .msg-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
   .msg-avatar.user-av { color: var(--ink3); }
-
   .bubble { max-width: 72%; padding: 13px 17px; border-radius: var(--radius); font-size: 14px; line-height: 1.65; }
   .bubble.from-marcos { background: var(--bubble-him); color: var(--bubble-him-text); border: 0.5px solid var(--line2); border-bottom-left-radius: 4px; }
   .bubble.from-user { background: var(--bubble-me); color: var(--bubble-me-text); border: 0.5px solid var(--bubble-me-border); border-bottom-right-radius: 4px; }
   .bubble strong { font-weight: 600; color: var(--accent); }
   .bubble em { font-style: italic; color: var(--ink2); }
-
   .typing-row { display: flex; gap: 12px; align-items: flex-start; opacity: 0; animation: fadeUp 0.3s forwards; }
   .typing-bubble { background: var(--bubble-him); border: 0.5px solid var(--line2); border-radius: var(--radius); border-bottom-left-radius: 4px; padding: 14px 18px; display: flex; gap: 5px; align-items: center; }
   .dot { width: 6px; height: 6px; background: var(--ink3); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
   .dot:nth-child(2) { animation-delay: 0.2s; }
   .dot:nth-child(3) { animation-delay: 0.4s; }
-
   .input-area { padding: 16px 28px 20px; border-top: 0.5px solid var(--line); background: var(--paper); flex-shrink: 0; }
   .input-row { display: flex; gap: 10px; align-items: flex-end; background: var(--surface); border: 0.5px solid var(--line2); border-radius: 16px; padding: 10px 12px 10px 18px; transition: border-color 0.2s; }
   .input-row:focus-within { border-color: var(--accent-border); box-shadow: 0 0 0 3px rgba(200,169,110,0.06); }
@@ -140,22 +102,32 @@
   .send-btn:active { transform: scale(0.97); }
   .send-btn svg { width: 16px; height: 16px; fill: #0f0f0f; }
   .input-hint { font-size: 11px; color: var(--ink3); margin-top: 8px; text-align: center; }
-
   .error-bubble { background: rgba(200,50,50,0.08); border: 0.5px solid rgba(200,50,50,0.3); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #e88; max-width: 72%; }
-
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
   @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
-
-  @media (max-width: 700px) {
-    .layout { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .starter-grid { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } .starter-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<div class="layout">
 
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-logo">
+      <div class="modal-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="modal-logo-text">SYGNAL OS</span>
+    </div>
+    <div class="modal-title">Access Required</div>
+    <div class="modal-sub">This is a private career intelligence tool.<br>Enter the access password to continue.</div>
+    <input type="password" class="modal-input" id="modal-input" placeholder="Password" autocomplete="off" />
+    <button class="modal-btn" id="modal-btn">Enter</button>
+    <div class="modal-error" id="modal-error"></div>
+  </div>
+</div>
+
+<div class="layout">
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="wordmark">
@@ -168,23 +140,13 @@
       </div>
     </div>
 
-    <div class="avatar">MA</div>
+    <div class="avatar">
+      <img src="data:image/jpeg;base64,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" alt="Marcos Amadeo" />
+    </div>
     <div class="sidebar-name">Marcos Amadeo</div>
     <div class="sidebar-title">Senior Digital Product Executive</div>
-
     <div class="sidebar-blurb">
       An interactive living résumé and career knowledge base. Ask it interview questions, explore leadership stories, or dig into specific roles — it's designed to answer the way Marcos would.
-    </div>
-
-    <!-- API KEY INPUT -->
-    <div class="api-setup">
-      <div class="api-setup-label">API Key</div>
-      <div class="api-setup-desc">Enter your Anthropic API key to activate. Stored only in your browser session.</div>
-      <div class="api-input-row">
-        <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-..." />
-        <button class="api-btn" id="api-key-save">Save</button>
-      </div>
-      <div class="api-status" id="api-status"></div>
     </div>
 
     <div class="divider"></div>
@@ -205,12 +167,13 @@
       <span class="pill" data-q="What did you build at Netflix and what were the results?">Netflix</span>
       <span class="pill" data-q="Describe your leadership philosophy and how it shows up in practice.">Leadership Philosophy</span>
       <span class="pill" data-q="What's your view on Latin America as a digital market?">LatAm Markets</span>
-      <span class="pill" data-q="What roles are you targeting and what would make it the right fit?">Job Search</span>
       <span class="pill" data-q="What's your take on AI in product development?">AI &amp; Product</span>
       <span class="pill" data-q="Tell me about your gaming experience — from ThreeMelons through Disney.">Gaming Experience</span>
       <span class="pill" data-q="Walk me through the Club Penguin LatAm story.">Club Penguin</span>
       <span class="pill" data-q="Tell me the Playdom Buenos Aires turnaround story.">Turnaround Story</span>
-      <span class="pill" data-q="Tell me about your first-party data and performance advertising work at Disney Interactive.">First-Party Data</span>
+      <span class="pill" data-q="Tell me about your expertise in payments and monetization strategy.">Payments Expertise</span>
+      <span class="pill" data-q="How have you managed P&amp;L and driven financial performance across your roles?">P&amp;L Management</span>
+      <span class="pill" data-q="Tell me about your entrepreneurial journey — co-founding Iconolab and building ThreeMelons.">Entrepreneurship</span>
     </div>
 
     <div class="sidebar-footer">
@@ -229,7 +192,6 @@
       </div>
       <div class="model-badge">SYGNAL OS · v1</div>
     </div>
-
     <div class="messages" id="messages">
       <div class="welcome" id="welcome">
         <div class="welcome-quote">"Ask me about my career,<br>my leadership approach,<br>or what I'm building next."</div>
@@ -254,7 +216,6 @@
         </div>
       </div>
     </div>
-
     <div class="input-area">
       <div class="input-row">
         <textarea id="user-input" placeholder="Ask an interview question, explore a career story..." rows="1"></textarea>
@@ -268,105 +229,81 @@
 </div>
 
 <script>
-const SYSTEM_PROMPT = `You are the professional AI persona of Marcos Amadeo, operating as Sygnal OS — an interactive living résumé and career knowledge base. Speak in first person as Marcos in every response. Represent his career, values, leadership style, and professional perspective accurately and with conviction. You are designed to answer interview questions, walk through career stories, and discuss leadership philosophy the way Marcos would in a real conversation.
+const PHOTO_SRC = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAD7ANUDASIAAhEBAxEB/8QAHQAAAAcBAQEAAAAAAAAAAAAAAQIDBAUGBwAICf/EAEEQAAEDAwMCBAMFBgQFBAMAAAEAAgMEBREGEiExQQcTUWEicYEIFBUykSMzNEKhsSVSYsEWJDVD0URykuFUgqL/xAAbAQABBQEBAAAAAAAAAAAAAAABAAIDBAUGB//EACURAAIDAAICAwEBAAMBAAAAAAABAgMRBCESMQUTQSJRFCMyYf/aAAwDAQACEQMRAD8A8hHop7R/8Zj0UCehU/o7+OW2kVGaNE39m35IwCGMfsm/JHASHie1dtSoGV2E4RovgpRMfXmVwydy2bWNU6hscjoztIYsf8FahsVUWOxkvWt62jdUWORrW5yxVbH/AGPj6POldfrk+7PqRVSDDzhoPHVTUOt66eNtO5zvRVW5xugrZYngAteUShJFUzLT16gKzGKIbJNRZoNo/dvqJDlzjnKg79e3085DD9FYLeQbfgY5Compoz99yrc5eMVhh8etXWvyJ+zXg1OA4jPoVIRUjDd4JWjnd1VLsBc2sHK0O3j/AJqAnrkJqk5Qejp1qm9Ya9pmNslvDXDq1UHxX0wyrp5JmR/GOQQtA028R0jHEgDCVvEEVwpntG0nB4WWpuMzfxOJQfCmANtrIJWjc3jkJ34jacZV0UoZGCXDhSunba6gnJDcNKsdwjingMZxyMJzs/oSj0YL4X2xsV0npahmXNcQMjstHuthoXbcwNCbU9m+5301MbOHHnAViuDOGnPUJ0psCWEdbNL218GXRM+qRrtGWiYOHlRHKlqh8sNsd5TSXAZ4WWXTWV8oa6Rj7dMYweHNOUo+TYHiIvXmioKbcaVrWnthMdM+HD66JslRu5VosVzqNQVrRPA9gPZy0Rr6e129p2AYClc2lgyMU3pmFd4SxGmJi3B2OFSK7QVxpax0Ls7c8HC3Sj1rbZJ3U5mZvHGMpnd71bnTl42O4z2QjOQXFGNDw3u8jQ+NxIPsuW/WS5W6ejDi1hK5L7ReCPAQ6Ke0Z/HhQIHKndHfx4T/ANGs02H9035I+MosI/Ys+SUxygSoADhGA4QgIcbeUdEyd0NcBbruxznFrXO5XpC2yxXW1twQdzccFeU2uIIIJBHTC1Hw61yKTZS1TtpHAyeCoLa97Q5PCw6l8MYLjcDO3cwuPJCNJ4a0lDSteG52jqVdaLWNukjBfKzooTWOuqGKjcxkrcY7FMjKzQySaMyuz22yqfTNIx2VYuNHU1rzIxhPohr7o643d87nHbnAVus4pnUwBxnC0of2uzDv3jz8ooq1kss7JvMlZhWlhEFZTtJwdwTuWSmgZnI4VZqrmH3qna05/aJ0vGMcK0JT5Fqkzc7UB+Ebs8huVF2i9Ndd3Ur3Ac4wVI2GRr7MMuH5Vl2pLk60a0ZI12I3nn0WZ462dEukjcY6Rjoi9oCrdwuBpK/yHOAGVKaTuba62NeX54VG8T6h1C81TeNjgT8lHGGSxjm+i909JHUftRjkZUdeIvJeGEcJLQF4ZW0EZ35y0ZTzUQLpg7sl+4BvoUtjIn0X7QcBR1dabPUOcXNjJPUYSxZMbU4Q53LM77PqqluEhp2F8WOACpIp/wCibLbbrVR01Y59OGjnoE08Rnvis73NJGGH+yhdFXK5uuGy5xuZk8ZKtutKA11mkDBuBYenqnL/ANdjfa6PMH3mojq3zxyODyTzlLS3SulYGvmcMDsUvV2iujuL6U078hx52rqq0VtJHvlhO31VlYQPS0aEuNWaCZr5nna8Y56Lk20Q4Mo5wQM7wuUTXY5NnngKb0kf8SChQFNaSH+ItUrXYWajTcwM+SVARKb9wz5JXBTCUADlGXAIwCQsCtajDjpwjAIQEULBWOsrIxiOpkaP/ckppZ5TmWV7/mUXHKMEsFgQAg5BwU9p7lUwYAJICbYQEIp4RyhGXtDyou1TICMnn1TFk0oqWTOPLTlCWo0EZklbHj8xwjujYVxh6Rd7Zrx1LReS/IOMKqajuz7rWCoIxg5CsNvscMlOQIwXkdwoq5WGQOywBuDygsTJGWrQmtfuNKKaplDdowCU319qhlyp3wh7XZ44Kpb7TVxE/AT8gkzQ1JGTG72Q8U3oOy3+GeqPwyQwVD8NzwtKrNV0c8bHF7M/NYA6kqonghjgfZLF9wIAEkgx6oOtPsSl1h6V09eqGWnIe9uCfVSMv4RNkktOV5jpr7daNmxkrsD1KeRa1vMfBfn6lROl6OViNd1hJb6CUT07mgjqpDTF3pLlRNikkZt7crCbrf7vXw4ma7afdNLFqWus7yGPcWZ5Cc6mN80ei5dM26Wcy+Uw/QKra5s9BBQSNDG4wVWaLxPDYQ2QuBxznKr2qNbzXKN0cBcAe6UYy0UpIjtPBkD6yPsJAuUPQXD7qH7gXF5zlcntPRiMPB5U3pIj8SaoTvlTGlTi5M+akl0FmsUjc07UvhJ0H8M1L8KMlC4XYRuF2EhHNQgLgEZoRQQhCEBGISc88UJa17svf+Vo6lJvF2JLeg5HGUaGnnmeBFE5xPRSdnoWVG18pOPYcK00tM1jA2PAA745VO/lqovcf4+VnbKrT2Ctl/M6OMnoCncembjBIyVskEm3khrsH+qtdBSySZLAQT1LlOUtA0MbvAOBgcdVkW/LzT6NWv4mtrsrNvqzSNcydjmSYx8Q4S8ckEjMPIc48nHZWC4WR9RGdrAOOeOqgKjTdUyJzoMxzNHwsd+V317FWeN8rGx5Loq8n4eUFsOx5FR0Ra0nnck3Wuic4c4GeMKmS3iqppXQzRyRyMJaWnqCuj1DM0AHK2IvVqZiyi4vGWqptVK1uCRnKSitdPgNDQTjuFWpdQOeQ5ziClIr+W/EHp2MYTk2n4HNw6Nrsn0UHcrJHBVBpYBxkcKUtV7FRI3dJj6o99q43fG57eB1yitGsjI7Y2eHcBtI7dkxj07587mlm33CmLTcYyzypNvTqpOKvpY+OAc8JNsSRSa/TsjDjkJIWF4jPwuPutAkqqJ55LTwU3dNTMBGASQh5MXiZtUWeqbIQ0ceh7LloUkdI95cXD9FyWiw8mKV0v8A9TjUWVKaYP8AikakmhGu2/8AhWpxhIW8ZpWfJOVETL0Fwh2oQhxwkhBQEoB7LgEOOE4QhWzCmgL9u5xO1rfUpKx0UlVVeZM7LsglN7nIHVgh4IjaAB/qPJP6YU5YGiP5kdcqCySRY48eyxRsbE9rWdAApSieDKADyq/5zg9ozxlSNE9/nMPRYXOl5PTpeJFIulvj3MztwFLU0Ae1rAOByoqyTsdGGuOMq0W6GMgE8Dp1XP2S7NhYkDHDgBpGV01Mxw27eAVMQwsBxgFC6nYSef6Ji32hn2x9My7xE0vHcKZ1dSMxWQtJLWj9630+Y7LI3NxnIIIOF6XuVPjJA4WI+I9n/Dr0Z4W7YKnLgB0Du4/3XT/Dc5z/AOuTOd+Y4KS+2BUyD3QHPqlCEU8Lozm2BFNJC8OaeiPVV80zCwnAI5SRRCEgAxTysbta9wR21lQ3/uE/NIlFKQ1ocsudVHxv3fNG/GKsjk89vZMXdUGEAaSQvVSRyM/Vco4BcliFpixypPTXFzYo8jhSGnuLnGpJoWmv2z+EYnXVNLV/Bs+SeNVb9LK9HYRhjC5cjgAQAjYRWow6pwiuvcX3WUnGfMPP9FZqGTyo2huCeOqq+C2tfJ6uOP1U5SSuc1ucqncXOOuybzvPAU5bg1zQ49cKt0TnBw3O7qzW2ESM+E8LD5nZ0fEkv0nbU5+QAc56K52p0mxvxAH5KpWuIs5BAwrba3xthDi7nPTKw7I9mm5rCcgJDMvecj2Sjnv/AJJD+iQdUwiNnON/f0XNqoAQ0uJTCLBKq3vcQ7oO6ovidbxVaenla0bqciUew7q/PdG4uIe39VAanphNa6yFw4lheM59irPBm67kyPlJTpcTz85JuCWkGDjKScvQIvVpwcljaEyiuHCUICKURokinqjOCAe6LQGEcOUBShCJznCaNaAwuRlyIDFQVI6fP+JxqNCkLEf8Rj+amsXQmbDaRmiYngCaWjmjb8k9AVPSyvQIQ4XYQ4RTCFwhBI6IVHXy8i0NgxRGqdKcEB2AEy2xVx1ktFDul4xI6ctbMd7gzBd391IUlytrGta+shGB0Luqgb5HQXqVlfSieB5bgxZ/K4eoRLdp+ja9s0rXPA5ILlT+37FqRa+qVMsLLUahstOABWl59GMJwn1BqepmiH3KCTYTgPkIYCoCvorNJbpY47e51U1hdGWA5HufZKt09XVkMBY99NRloLS0dRj1WZfKL9l6r7W/ZYZL5cpnjNbT0wacFrasZP8A/Kc0Wt6m2Y3yTVbDydkjX7f7f2UVRaBoS9tU+qcwcboyQWn3SOp9LU9FJJU0ZeGEkhgaQzHzVLwrk8LSd8Vumo2jxL09V2thmrxBIHcNe0gqq6p17LLcd1ruBdFz0GG//JVXwg0lb9WT3N9zqZ2NEhjp/LO3aecu9xnt7KXtOi2GimjqWyGW3VslPMQMsBDupHuMKJ00wkSRt5FkV/jJex6srXP3OvVJJ0yJZHEf0AVukvN6/DZHH8JqoSwnLal7Dtx2JBVPp/D63SQyup64te8ZGSMMJ5+HHyUjYdL1cNNJTVe+aIn4MkgAeuPllDa1JOIfGzxfkUOGupquZ0cRfvaN2COyULT6EKyWmwU8t/vMsUbQ0VAiYAMAABS79Os2n4F23Ei51Js47kWKFjiUEjlEcFZrpZDG0ljOcqBqqd8T8PGFO4NDFNMZuByuxyjkcrsICYTCAt5SmEU9U0ATC5GXI4BGJbQntj/6nF8004wndk4uUfzU1gtNjso/5JifgJjZf4JvyT9UmWV6OwuKFDhFCYCb3akiq7ZLG5oEjPjjd3yOcJzhdjIx2UPIq+yDiWuHf9Nil+FGuzZKK7U8VIzcZSNw9QpuHOTGOPThN79RzOqHzxBwkp2BzH44f14XUUpMkUjztywbuOhVCiLinFmhyWpNSXosNlEcc5jLeJGlrz3wRhXXQb6JlIy21z4hPCPL2TOw14B4c3PBBCocLHP2GN23B6qftsT6pjYamq3x56FgP91ncuCZc4v/AKNRbZ7VG0ysipW4P5gRws18WLjSRUL6ChqIpa6Y7GxxuDtgPVxx0UvPYdPU9CJqh00zjx5YdgOP0We6nqhZr4PudmY6Ax5ZsHG//UVn0Jefs0b4y8cZZPBumloJnQRtJbwCehJWl3ARacvkt5rGbLXcfLjr3YJ+7ygYbKR/lIw0+mAfVYJpfXtZT3o/eaP7tISNuw7g45W52+/XeudSQy2l1VSVrNkznkANHuCncpZLyHcdqdfjH8JylqdLSN81tytTmnkESsTSu1FYaeldBRVH4jVtyI4KRpke70BPRvPckAKHttLpyC9S0VZbadszHZBLeo7K3SQ0kNLtpYo42E9GBVIyj5LCSyqePWVjTFoNNQh04aaiZ7ppi0cb3HJAPoOn0U4yiZjBYEekbtiaRyE5aSF6JQsrikeacl7bLSNqLPDM0gsCrt70nFIHFrOo64V3DsEcZXPLXZBZkFSKT9EG56MMvGmqqnLjGDgeygXxSRv2yAgj2XoCttsM7eGN+oVN1DphhDnNiGexARaTJY3fjMwKAqRudrqKV5yzLQVHH9E3CdNNBQuXcLkhyMSTuznFwi+aakJe18V8fzUlqY02ixnNCw+yfFR2nzm3s+Ske6ptFhegQjj1RVwQYQSUI9UUoWg5x3S0QWrY59NIGxl/GQB1KqsbZgB5zNrskhp7DK03TtofUOD3tdjPZZxqaR0N2eWjkOc3n2KZZSkvItVXN/ySdum2ho4APVWWwRPkm2RHcc5VJtFW14IJbnorroWujgvULJXANJ6k9lzvO2JucOS0QuVdLGRI5xwCQ1voM4TZrHV5w8AknlTeutN0NdVOijkmhaDuY+GQtIz8lSrdpKvoZ5I31tZXNJ+FzJy1zR2yO6pUuMo6i9KM3IuVj0lTNZJcPuTH1MTmmM4yfmtJtMdRFEw+W5mWglpPT3VH0bp1stK576m/0zzIWvDKluC3twVM3PTj6ppoLPcr1SVTXtDquSp3BrM5OB0Jx+irXScnjZapj4+kBry2y1cjK2hl8uvpgXA5wJG/5SrDpiqnmscMtU3a8tBIyoSvsFLZfu8kD6mcS5jnknmdI6Q47kn+g4UvHhwpqaMbY3fAAD6qCqPnZGEQ3zddcpSJulYW07Se4z+qWb7o20NaGt/KBhAF6VWsgkeYXNSm2CQMLsIceqHCJHgUgIjo2v4eAQlccICMINgwr17sMNSxxDB+izjUemnQPc6JuMey2U9D1TC4W+GqiIcBlPUt9iUnEwCWF8by17TlctNuulWOnBDFyPiidXo8gFL2z+Nj+aRwnFsH/Ox/NS2Ik02PTv8A05nyUmovTwd+HM44wpMFZzfZZS6BXIc8oR8kgnBSVho/vdaxhGQD1UcArTo59LSQS3CtlbBTQNL5JHnhoCUX32MseLoutHTQ2q2OnLA57WktZnBcfRedb7LJU1c08sQjeZXF8ZOdpychT2kNZTau8VLlcJal7adlMYqGnJO1sQcBnHr3PzUzr/R1cY5b3a4TUMI3VELfzNI/mA7j1T7mpV6h/HeSxmYMkMTy6MhoDunopq33UsqoqiP4Q3guPYKvVseD5mS/PLSD39ClrLICDFJja/oAO6weTBTNembgzYaS6MrZInlzRlmHJvcJH0lWHhrjjo4LO7NdZaKr8l3xBzvhPC1yzVttrbdGyYNdOAA7HZZFlf19o2ONyHPoeWTUofG2N1LHK/n4nAcK42OqqKyFr3wCLBJ2gKBtNtthkdIacN2gYVvtUlLFGNgwz3VC2evEbEHJR1kTqp4PlxnaNjt3J/mxwmuj6eSaZ9dKSQwlrG9t3cj5INTMlrbnBTUDXTVFQDtYBnAHV3yCsNvpY6KjipYgfgHxO9T3K2vg+EpWecvw5j5znNQ8I/o4KAYXIDwuxOMaDLsoAgymgYfKKUGUVxSwRxKK45IXE8IhciB9guaw9QuRS5cnJEeHgcpzaRvuMTfVybO6JzZ+LlCf9QVmaLr9M3jTVr8y1NcT/Lwlaihkhcergnuk6hrbVGHc8BP5JI5SRws6cVpNVN4VohzTyELT3Upco6Smp31NTPHBEwZc97gAFQb9re30m5lsZ97f2eeGf+SopNR9kvstpcxrS6R4Y1oy5zugWa+I+t/xelbZbY57LdG7MjxwZ3Dvj/L6KAvepb1dCYp6othecCNg2tUM+N/chVrL/wAQ6MN9kno+7yWXUNJcGEtbG/EmD1YeD/5Xr3St1ZUUUc7XB2MZI6OaRwV4r2kdP0W8eBmp/vVu/Dppsz021hBPLmfyn/ZLj29+L9BlH9Lf4ueGklyppdQ6VjzOAX1VvbgeYOpdH/q9uh+axe2uYBtmaWEEtIIw5p/2K9eaZqWCYRyEYPRRHip4QUWo7dPddPU8UN1/O6MYa2oP+zvdUeZBwfRf41iksZ5hnp3bt8chD2/ld1UnbrzNRxgyvfDN3/ynHU8oW0VRbaqWguNPLS1UTi1zJGkFpHYj1Sk9GZGAyRNlafbKznNPpmhGtrtF4sOtoXxMZLUNDnAAjcrVadaUT2OY1zZGgcAcrIqGyQOkD2UzWcfzDqtF0NpCWR8dVO0Rw5+GMD+vuqVirT0vVzua8S2aVudTR3mnvb2Fxkd5MZI5aw9cLR77SANZcKcAQzHBA6Nd/wCD1VGrooItVWGzxNADmSTFvpgAc/qtUtlIyroZba/o5u1v+kjo5Xvi+VKuxf4Z/wAtxIuv/wClOGVyJBU0Utyq7ZFW00tZRSGOohEg3xu929RkYITkwkYyMLsVNSWo5CUWnjESikpSRu0JFzuU5DQSUUldyegXOY/HRLoDTCOKISiyFzSRhELkcGaH3e65JZXIgPCRS9sOK+H/ANwQRQk/mc1o745KdQNpoyHxnc4dyUbuTXF+y8q3I2y0XK30VsYaytgpwGjG94B/RQN/8QaSnDorRC+eQ/8AelG1o+Q6lZpJVEvdk590iZS88hZNvITfRYrq8UPb1eLjd5jNXVL5jn4Wk/C35Doo1zXnqlCF2OFTlY5eydLBnKNkrD3ylXM4XVULpNpjJa5vI47pF1RVNOyaPd7hMEH2qY0TdnWXU1NXMcWsDvLlx/Mw4z+nB+ijWsJjyRyfZELfi2kZBSTx6I9n2Sr30dPVRuyS0ct/utGtGoKeitz6mqcSGYa1o6uPoF558ANRfielXW6slHn0BEZyeXM/lP8At9FsdVQyGmpYpmPZBEwSOdjOXu559sYT+RanAlorbl0QPiNaLXrqpFbWUkdsqAAI6pg3Fw7CQdx79lQ6rQFztU/kygOafiY9nLXNPQg9wtSqIPLe0TZZg5GD8JHqE6thqDGyjnhe+md8UL3N/I4+nsfRY18di3E3OLZ4SUZeig6d0w2OUGSIuf8AJX6ipmUsBfI1ga0Zx2T/AMuOIABhyfoovUUxjoZGAOxjcWjqfQfUrGcnN4dAowS1Fcsj3XPxTkrDny6KjwPTL3cD9AVqFkuL6KhqLi9gcYiQ1pONxJ4Cp2jbBJZZKm53KobH58fnVJI/dAcNH9Sn1m1H/wATXCe20dM6nt9JIBHvGHynu8+3oFrUQcImBz7o2NpGP/a1pmfjFg17bC+23Woc+kqDDIWOftG5rhjrjOCqrpPxz1Bamsp75C27QN438Nlx8+hSf2ndSfi/iEbNTS7qKzM8hoHTzTgvPz6BZTJy/gYC2KbpwS7OesqjJs9c6U8R9K6paxtJcW09S7/01T+zeD9eD9Fb46YuOSOOy8MMABz3HIPorrpXxO1np5rIqS7PqKdnSCrHmtx6DPI/VaEObvTKkuLnaPXsNK1p5AR3QscMBYxpLx+tlUPK1Hbn0EgH7yAl8Z98dQtY07frTqCgbXWivgq4TwXRuBIPoR2KsKxS7TIpVtClTR9SEwnpXNyeynj0SM8e/PyUysZG60V0te04cFydVbMS4XKZSIXHGeAmSPBzn9E8icHjPG7HPumQaUvCdpBWDY23prxWIdY9EZrfVA7oHjof7o46KEeGAGEO0YXMSjh0TdDghODHG57RuICJSujmia9uCT/RLvAOQehCZfwdZlv7qQ4d7FFCY+2BJStAJIS/XkchEc3J9kBYXHwWvUFr1/ao6uUxUNZUx09U7s1rnAAn2Bxn0BJXvuppoJpvJcwNdjDSfyuHoV8zWEskX0K8B9Tt1t4T2m5ySCS40sQpat3UukYMZPuRg/VQ2LUT0zwfVFkipmmOpg30uenXbnsPZIPtE9oDamiP3mgdzt6kfT2V7pdk0PlyjcCMEEdU2+5SUTnGl/aQOPxRHlQqP4WftKNXmOOB1RHgxv8Aiae49lH6HozeLtUVTsSxUpyd3Qv7foOfmrVqi0wy2WskomeWZGnLMY2v9Ut4fWOax6bgp/L3VDh5krz3ceqori5b5I1X8gv+N4/oe1210l9eyaESU0sW128ZHHIVe17HbtBUV11VBRSzeRTOcynhZnzJMEtbx0yeCewWlxNAAOPixgkKN1TRRXCz1NLLG1zJIy0g/JaGGK5Ns+Zhq6iuqKirq3+ZUzyvmnf/AJnvcXOP6kriApfXNodp7X11s5aRHHO4x8dWnkKLmZlvop0+iu1jCNx2QhFjGPhPVHaDzlIWAYz25U9ofVlx0XqKlu9C5xh3BtTTg4E7PQ9s+h9VBdDlEuHFDIf8uHD6KWuxxZHKKZ7ttVwprpbKe40b99PURNkjd6gjKXc7ghY99mPUD6/R01pmkLpKCX4MnpG7kf1yta3/ABYJ5WxW/KKZRsXi8GdU0eYuTiVgc7K5Tp9Efhp8792DjOfklWPyibG44RwzgcrFm9NBLEPqUl7CwkcjhcHYPcHukIHEOCWqzh4kHR4z9VCEXhKcEZamNO7JCfM5bj1QY+L0Sck5o2yxGN3dLvHZJ9EkBhKCRxY6J/EkfBHqOxTlw4TKozFK2qA6fC8juE/Zh7QQeO3ugwxGsowcgfJeh/sR6yFs1rVaRqpcU94iMlMCePPjGSPmWZ/+K8/St4xlP9I3ms03qW232hJ+9W+pZURgdy05LfqMj6oSWoS6Z9MT+xm68FOmP4yTkFRltuNLf9NUF9t7myU1bTMqInN6FrgCnVFIHxAZwQq5Po3usj/Pjp+Gh72tzj8wKmYmSeUN4AIGFC6iPk/danptkbk/Jw/8qxyfFHx36I4BsaZwkpQHsLT3XEncW+hQnn2QHLo8S/bD09+Fa0orzHHtZVNMbyPVvT+hWOuw5rSPReyvtd6WF68PKmshiLp6IioaRycDqP0yvGFFIJKcAn4m8FSQYyf+gEAyZSg5z/RFcOpRmdFIhgVwKCZu+llae8Z/sjPQNPDh7Jfomah9lKuLNZz0Bdn71by4DtlhB/3XpCoLmyleVPsz1ApvE+zPe4NbLBNCc9yW8D+i9czRteXD17rX4k/4KV0eyM+8uXJaSkOeAuV3ogPnqEsz0SXZGD/ZYcmXkLgeiVmBfROH80Z3D+xSDHJ3TEEua7oRhRv2EaU0vIUtAQQoB37Kbb7qYopNzUGuhyY5dykXjCWPRJycpqYWJ9WlruQRyEW3OMT307+g5b7hGHBRKphw2Vg+KP8At6IsaPHjhJNyDwcH1R4ntlja9pyCEOMH/wCk30PZ7K+xLq03XQldpGrk3TWmXfTZPWCQk4//AFdn6ELbWDyawt9SvCX2cNZHR3inbaqZ+2irXiiqfQNeQGn6OwvfNbFyJAORhQyXZJF6M9WRebZzj8w6ex7JGxaqt15sLp7dX0k1VCwxyxiZpMcoGNrueDlJeIVlqtTaEuFnoa99vqaiEsjqWD4oz6hef/D3wEp66zv/AOIrrXOq7dXSU0zqVwaZ4Wv3sDjjJBDieueUUgs13wS1XfdW6Qqq7UVIyludJcpqSZjW7W4a74SPoVoDeVnHgX4d1fh/adQU8srH0lwuP3qijLy58UQYGhrz0J47LRIn/FhBpIS7RD61t0Vz0/V0kjA5ssTmOB9CML5xXigks+p7napgWvp6h8ePkV9NKmPzYJIz/M0heCftQ2Y2bxaqKgM2x17Gy+24DDv6hGPsUu0Z1J1QA8YRn4cMog7qUjRx5Qxj4h9UAQt4eCgBhdJ3WeyV9vu0BPmUczZQB1ODyPqMr2xZ7vDcKGCugfuiqI2ysPs4ZXh6GPZBhx4GRheq/BOuFz8NbRMzG6GL7u8ejozt/wBgfqtPgy1NMr29GmxzMcM5C5RDZHNGFyvYVzwE1KNAPUJMdEcdQsYuC7YyRnojMLmu5HCCInB5TiUDyM47JjCRVyGJi5vfkJ7b3/D9Ewrido+Sc2/8v0S9oBLMdkIH5SURPCOSfVMHaEKUjPbrnqiIWotiE6QmGpfTngOO5ny7hPevb6phcCW+TIOHB4we6ft6BNfYtClu7LCSC4YyOy+ingfqo628KLHfJpGvrDTCnrcf/kR/BIfqRn6r54YGF63+whVVEmkdR0skrnQRXFro2Ho0mNucfNRzfSJoRb1noymOMjj9EhZIoYLpco2Na10hZIeOvGEvjDzjjlNabjUbscbqbn3w4JnocyVkDTCcHOeijYztnwnsH5XD0KZO/flEaOeCMFeUfty2UeVbb0xnMcuwn2d/9herm9AsC+2nFG7w0le5oLmyAg+nISj7D+HjqE7o2n1C4/mck7cS6nBJzhKuAyVMRgZA5QGQDoMpNxIyjD8pSAxN4L8t7HsvQP2VKrfYbxa3uLvKqWzMHpubg/1asAi7rafsrvcLxfGBxDTBGSPqVb4j/vCG1dG9Pi56rlxJ9Vy10VT/2Q==";
+const CORRECT_PASSWORD = "Invictus2026";
+const API_KEY = "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";
+
+const SYSTEM_PROMPT = `You are the professional AI persona of Marcos Amadeo, operating as Sygnal OS — an interactive living résumé and career knowledge base. Speak in first person as Marcos in every response. Represent his career, values, leadership style, and professional perspective accurately and with conviction.
 
 WHO YOU ARE
-You are Marcos Amadeo — senior digital product executive based in Mexico City with 20+ years building, launching, and scaling consumer digital products across Latin America. Your career spans Netflix, The Walt Disney Company, Playdom/Disney Games, ThreeMelons (acquired by Disney), Clarín Group, and Iconolab (agency you co-founded).
+Marcos Amadeo — senior digital product executive based in Mexico City with 20+ years building, launching, and scaling consumer digital products across Latin America. Career spans Netflix, The Walt Disney Company, Playdom/Disney Games, ThreeMelons (acquired by Disney), Clarín Group, and Iconolab (co-founded). Graduate degree from Carnegie Mellon University. Argentine and EU (Polish) citizen. Fully bilingual English/Spanish.
 
-You hold a graduate degree from Carnegie Mellon University and a Section4 Strategy Certificate. You are a citizen of Argentina and the EU (Poland). Fully bilingual English/Spanish; proficient in Portuguese, French, and Italian.
+CAREER KEY FACTS
 
-CAREER — KEY FACTS
+Netflix (2022–Present): Head of Product Discovery & Promotion, Latin America. Built regional Product Discovery function from zero. Delivered 1,000+ titles through AI-assisted workflows. Pioneered first live titles for Netflix outside UCAN. LatAm Regional Leadership Team, 100M+ users.
 
-Netflix (2022–Present): Head of Product Discovery & Promotion, Latin America. Built the regional Product Discovery function from zero. Delivered 1,000+ titles through AI-assisted, tool-driven workflows. Pioneered first live titles for Netflix outside UCAN. Part of LatAm Regional Leadership Team serving 100M+ users.
+The Walt Disney Company (2019–2022): VP & Head of Entertainment, Digital Business & Content Experience, LatAm. Led Disney+ launch across 44 countries, 9 platform partners. $10M budget, 35-person team. Exceeded subscriber forecast by 17%+ in Q1. Then launched Star+ with 3,000+ live sporting events/month.
 
-The Walt Disney Company (2019–2022): VP & Head of Entertainment, Digital Business & Content Experience, LatAm. Led Disney+ launch across 44 countries, 7 content regions, 9 platform partners. $10M budget, 35-person team across Argentina, Mexico, Brazil. Exceeded subscriber forecast by 17%+ in Q1. Then launched Star+ with 3,000+ live sporting events/month.
+Disney Interactive LatAm (2015–2019): Director of Operations. Built multi-million record first-party data database. Saved 30%+ in agency fees by bringing performance advertising in-house.
 
-Disney Interactive LatAm (2015–2019): Director of Operations. Built multi-million record first-party data database of Disney fans. Saved 30%+ in agency fees by bringing performance advertising in-house.
+Disney Interactive / Playdom (2013–2015): Director, Games & Mobile. Club Penguin LatAm: 4M members, $14M/year. Brazil became #2 CP territory globally. Pioneered SMS billing for unbanked C/D demographics — became Disney Interactive payments playbook.
 
-Disney Interactive / Playdom (2013–2015): Director, Games & Mobile. Led Club Penguin LatAm to 4M members and $14M/year revenue. Brazil became the #2 Club Penguin territory globally. Pioneered alternative payment via SMS billing for C/D demographics.
+Playdom Buenos Aires (2011–2013): Studio Director. Restructured 65% of team. Turned studio to positive margin. Revenue 3x. Launched Kitchen Scramble (sold to PopReach) and Criminal Empire.
 
-Playdom Buenos Aires (2011–2013): Studio Director. Restructured 65% of team. Turned around studio economics to positive margin. Launched Kitchen Scramble (later sold to PopReach) and Criminal Empire. Grew revenue 3x.
+ThreeMelons / Playdom (2010–2011): Product Manager & Partner. Bola Social Soccer: 23M players, 1M+ DAU during 2010 World Cup. $5M+ via brand deals across 19 brands, 10 countries. Acquired by Playdom → Disney.
 
-ThreeMelons / Playdom (2010–2011): Product Manager & Partner. Built Bola Social Soccer to 23M players and 1M+ DAU during 2010 World Cup. $5M+ via brand partnerships across 19 brands in 10 countries. Company acquired by Playdom, then by Disney.
+Iconolab (2005–2009): Co-founder. Won One Show Award 2007. Clients: Coca-Cola, Adidas, Kraft, Grupo Clarín. Campaigns across 7–8 international markets.
 
-Clarín Group (prior to ThreeMelons): Product Manager. Worked within one of Latin America's largest media conglomerates on digital product initiatives.
+PAYMENTS & MONETIZATION EXPERTISE
+Deep expertise in alternative payment models for emerging markets. Pioneered SMS/mobile operator billing at Disney Interactive — enabled monetization for unbanked C/D demographic populations across LatAm. Structured brand partnership deals totaling $5M+ across 19 brands. Led platform monetization strategy for Club Penguin ($14M ARR). Experience across subscription, transactional, and brand-sponsored models.
 
-Iconolab (2005–2009): Co-founder. Won One Show Award for IMC (360) in 2007. Clients: Coca-Cola, Adidas, Phillip Morris, Kraft, Grupo Clarín. Campaigns reproduced across 7–8 international markets.
+P&L MANAGEMENT
+Managed $10M+ budgets directly. Full P&L ownership across multiple roles — from studio economics at Playdom Buenos Aires (turned to positive margin) to Disney+ LatAm launch budget. Experience driving cost optimization (30%+ agency savings at Disney Interactive), revenue growth (3x at Playdom), and subscriber economics at Netflix scale.
 
-SIX KEY CAREER STORIES (use when relevant)
-
-1. Disney+ LatAm Launch: Three parallel streams — platform/partner readiness (9 partners), content ops (1,200+ assets, localization, compliance), go-to-market experience. 44 territories on schedule. +17% subscriber forecast Q1. Immediately followed by Star+ launch.
-
-2. Netflix Product Discovery from Zero: Designed workflow architecture, integrated generative AI into creative production pipelines, established LatAm voice in global org. 1,000+ titles delivered. First live titles outside UCAN. Became reference model for broader org.
-
-3. Playdom Buenos Aires Turnaround: Restructured 65% of team, preserved creative DNA. Repositioned toward Facebook social games with global reach. 3x revenue, positive margins. Kitchen Scramble sold to PopReach — validation of product quality.
-
-4. Club Penguin LatAm: Deep narrative engagement with subscribers, alternative payment via SMS/mobile operator billing for unbanked populations. 4M members. Brazil #2 globally. $14M yearly revenue. Payment model became Disney Interactive playbook.
-
-5. Disney First-Party Data & Performance Advertising: Hired and restructured team, brought performance advertising in-house, built multi-million record nominal database. 30%+ agency savings. Positioned team well for Disney+ and Star+ launches.
-
-6. Bola Social / 2010 World Cup: Led 26-person team from product definition through live service. Structured brand deals across 19 brands, 10 countries. 23M players across 5 platforms. 1M+ DAU during World Cup. $5M+ revenue. Company acquired by Playdom → Disney.
+ENTREPRENEURSHIP
+Co-founded Iconolab in 2005 — built from zero to award-winning agency with Fortune 500 clients. Partner at ThreeMelons — took product from concept to 23M players and acquisition. Built multiple functions from scratch: Netflix Product Discovery LatAm, Disney+ LatAm ops, Disney first-party data infrastructure. Energized by ambiguity and building things that don't exist yet.
 
 LEADERSHIP PHILOSOPHY
-- Build from zero: Energized by ambiguity; transforms it into repeatable operations.
-- Autonomy with hard accountability: Invest deeply in making sure teams understand the "why" and the target, then hold clear accountability for outcomes.
-- Build for the market that's actually there: LatAm is not a smaller version of another market.
-- Cross-functional fluency: Marketing, Finance, Legal, Tech, Creative, C-suite.
-- Data and judgment in balance: Data interrogates assumptions; it doesn't replace conviction.
-- Player mindset: Actively builds with AI tools.
+Build from zero. Autonomy with hard accountability. Build for the market that's actually there — LatAm is not a smaller version of another market. Cross-functional fluency. Data and judgment in balance. Player mindset — actively builds with AI tools.
 
 CURRENT FOCUS
-Actively exploring CDO, Head of Product, General Manager, Country Manager roles — especially at global platforms expanding in Latin America.
+Exploring CDO, Head of Product, General Manager, Country Manager roles at global platforms expanding in Latin America.
 
 BEHAVIOR RULES
-DO: Speak in first person always. Lead with outcomes, not process. Be warm, direct, confident — not arrogant. Reference specific career stories when relevant. Answer interview questions directly and with substance.
-DON'T: Discuss specific salary expectations. Speculate beyond what's documented. Mention or discuss any current ventures or side projects.
+First person always. Lead with outcomes. Warm, direct, confident. Reference specific stories when relevant. Don't discuss salary. Don't mention side projects. 2–4 paragraphs per answer.`;
 
-TONE: Senior exec who also codes on weekends. Warm but direct. Global worldview, deep LatAm roots. Storyteller. Data-informed but not data-obsessed. Responses: conversational but substantive, 2–4 paragraphs for most answers.
+// Password modal
+const modal = document.getElementById('modal');
+const modalInput = document.getElementById('modal-input');
+const modalBtn = document.getElementById('modal-btn');
+const modalError = document.getElementById('modal-error');
 
-CONTACT: marcosamadeo@gmail.com | linkedin.com/in/marcosamadeo | Mexico City`;
+function checkPassword() {
+  if (modalInput.value === CORRECT_PASSWORD) {
+    modal.classList.add('hidden');
+  } else {
+    modalError.textContent = 'Incorrect password. Please try again.';
+    modalInput.value = '';
+    modalInput.focus();
+  }
+}
+modalBtn.addEventListener('click', checkPassword);
+modalInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
 
+// Chat
 let history = [];
 let isLoading = false;
-let apiKey = sessionStorage.getItem('sygnal_api_key') || '';
-
 const messagesEl = document.getElementById('messages');
 const inputEl = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const welcomeEl = document.getElementById('welcome');
-const apiKeyInput = document.getElementById('api-key-input');
-const apiKeySave = document.getElementById('api-key-save');
-const apiStatus = document.getElementById('api-status');
-
-// Restore key if saved
-if (apiKey) {
-  apiKeyInput.value = apiKey;
-  apiStatus.textContent = '✓ Key saved for this session';
-  apiStatus.className = 'api-status ok';
-}
-
-apiKeySave.addEventListener('click', () => {
-  const val = apiKeyInput.value.trim();
-  if (!val.startsWith('sk-ant-')) {
-    apiStatus.textContent = 'Invalid key format — should start with sk-ant-';
-    apiStatus.className = 'api-status err';
-    return;
-  }
-  apiKey = val;
-  sessionStorage.setItem('sygnal_api_key', val);
-  apiStatus.textContent = '✓ Key saved for this session';
-  apiStatus.className = 'api-status ok';
-});
 
 inputEl.addEventListener('input', () => {
   inputEl.style.height = 'auto';
   inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
 });
-inputEl.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
-});
+inputEl.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
 sendBtn.addEventListener('click', send);
-
 document.querySelectorAll('.starter-card, .pill').forEach(el => {
   el.addEventListener('click', () => { const q = el.dataset.q; if (q) { inputEl.value = q; send(); } });
 });
@@ -374,12 +311,6 @@ document.querySelectorAll('.starter-card, .pill').forEach(el => {
 function send() {
   const text = inputEl.value.trim();
   if (!text || isLoading) return;
-  if (!apiKey) {
-    apiStatus.textContent = 'Please enter your Anthropic API key first';
-    apiStatus.className = 'api-status err';
-    apiKeyInput.focus();
-    return;
-  }
   isLoading = true;
   welcomeEl.style.display = 'none';
   addMessage('user', text);
@@ -397,16 +328,11 @@ async function callClaude(typingEl) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
+        'x-api-key': API_KEY,
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: history
-      })
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYSTEM_PROMPT, messages: history })
     });
     const data = await res.json();
     typingEl.remove();
@@ -429,7 +355,13 @@ function addMessage(role, text) {
   row.className = 'msg-row' + (role === 'user' ? ' user' : '');
   const av = document.createElement('div');
   av.className = role === 'user' ? 'msg-avatar user-av' : 'msg-avatar';
-  av.textContent = role === 'user' ? 'You' : 'MA';
+  if (role === 'marcos') {
+    const img = document.createElement('img');
+    img.src = PHOTO_SRC;
+    av.appendChild(img);
+  } else {
+    av.textContent = 'You';
+  }
   const bubble = document.createElement('div');
   bubble.className = role === 'user' ? 'bubble from-user' : 'bubble from-marcos';
   bubble.innerHTML = fmt(text);
@@ -444,7 +376,9 @@ function addTyping() {
   row.className = 'typing-row';
   const av = document.createElement('div');
   av.className = 'msg-avatar';
-  av.textContent = 'MA';
+  const img = document.createElement('img');
+  img.src = PHOTO_SRC;
+  av.appendChild(img);
   const b = document.createElement('div');
   b.className = 'typing-bubble';
   b.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
@@ -460,10 +394,12 @@ function addError(msg) {
   row.className = 'msg-row';
   const av = document.createElement('div');
   av.className = 'msg-avatar';
-  av.textContent = 'MA';
+  const img = document.createElement('img');
+  img.src = PHOTO_SRC;
+  av.appendChild(img);
   const b = document.createElement('div');
   b.className = 'error-bubble';
-  b.textContent = '⚠ ' + msg;
+  b.textContent = '\u26a0 ' + msg;
   row.appendChild(av);
   row.appendChild(b);
   messagesEl.appendChild(row);
